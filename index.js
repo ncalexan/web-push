@@ -2,6 +2,7 @@ const urlBase64 = require('urlsafe-base64');
 const crypto    = require('crypto');
 const ece       = require('http_ece');
 const url       = require('url');
+const http      = require('http');
 const https     = require('https');
 var colors      = require('colors');
 
@@ -87,7 +88,7 @@ function sendNotification(endpoint, TTL, userPublicKey, payload) {
     }
 
     var expectedStatusCode = gcmPayload ? 200 : 201;
-    var pushRequest = https.request(options, function(pushResponse) {
+    var pushRequest = (urlParts.protocol.startsWith('https') ? https : http).request(options, function(pushResponse) {
       if (pushResponse.statusCode !== expectedStatusCode) {
         console.log('statusCode: ', pushResponse.statusCode);
         console.log('headers: ', pushResponse.headers);
